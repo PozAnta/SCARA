@@ -187,7 +187,6 @@ class ProjectEditor(Select):
     def open_panel_terminal(self):
         terminal_onj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/button[9]')
         terminal_onj.click()
-
         time.sleep(3)
 
     def write_panel_terminal(self, command):
@@ -384,7 +383,7 @@ class IO(ProjectEditor):
 class Home(Select):
 
     def power_button(self):
-        self.power_button_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/button[4]')
+        self.power_button_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/div[2]/button')
         self.power_button_obj.click()
 
     def write_terminal(self, command):

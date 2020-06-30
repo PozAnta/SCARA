@@ -23,6 +23,7 @@ class App(QWidget):
     def __init__(self):
         super(App, self).__init__()
         self.sql = SQL.Data()
+        self.thread = MyThread()
         self.combobox = QComboBox(self)
 
         self.selected_tests = []
@@ -73,7 +74,6 @@ class App(QWidget):
         self.show_button.clicked.connect(self.show_tests)
 
     def start_progressbar(self):
-        self.thread = MyThread()
         self.thread.change_value.connect(self.set_progressbar)
 
     def set_progressbar(self, val):

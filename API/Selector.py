@@ -45,18 +45,65 @@ class Select:
     def close_cs(self):
         self.driver.close()
 
-    def press_jog_panel(self):
+
+class Graph(Select):
+
+    def press_dashboard_button(self):
+        dashboard_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/mat-sidenav/'
+                                                          'div/main-menu/div/ul/li[3]/mat-icon')
+        dashboard_obj.click()
+
+        time.sleep(3)
+
+    def press_plus_graph_button(self):
+        plus_button_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
+                                                            'mat-sidenav-content/div/div/dashboard-screen/div/'
+                                                            'app-recordings-screen/div/button')
+        plus_button_obj.click()
+
+        time.sleep(3)
+
+    def press_selct_graph_selector(self):
+        select_graph_obj = self.driver.find_element_by_xpath('//*[@id="mat-select-0"]/div/div[1]/span')
+        select_graph_obj.click()
+
+        time.sleep(3)
+
+    def press_graph(self):
+        graph_obj = self.driver.find_element_by_xpath('//*[@id="mat-option-1"]/span')
+        graph_obj.click()
+        time.sleep(3)
+
+    def press_graph_show(self):
+        show_graph_obj = self.driver.find_element_by_xpath('//*[@id="mat-dialog-1"]/app-external-graph-dialog/'
+                                                           'div/div[2]/button[2]/span')
+        show_graph_obj.click()
+
+        time.sleep(5)
+
+    def press_downolad_graph(self):
+        download_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
+                                                         'mat-sidenav-content/div/div/dashboard-screen/div/'
+                                                         'app-recordings-screen/div/div/div[1]/button[4]')
+        download_obj.click()
+
+        time.sleep(3)
+
+
+class Jog(Select):
+
+    def open_jog_panel(self):
         jog_panel_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/div[2]/button')
         jog_panel_obj.click()
         time.sleep(3)
 
-    def press_close_jog_panel(self):
+    def close_jog_panel(self):
         jog_panel_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                           'mat-sidenav-content/div/mat-card/div[1]/button[2]')
         jog_panel_obj.click()
         time.sleep(3)
 
-    def press_jog_control(self):
+    def open_jog_control(self):
         control_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                         'mat-sidenav-content/div/mat-card/div[1]/button[1]')
         control_obj.click()
@@ -128,84 +175,16 @@ class Select:
         webdriver.ActionChains(self.driver).release().perform()
         time.sleep(3)
 
-    def press_enable_disable_in_jog_panel(self):
+    def enable_disable_in_jog_panel(self):
         enable_jo_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                           'mat-sidenav-content/div/mat-card/div[2]/button')
         enable_jo_obj.click()
         time.sleep(3)
 
-    def write_terminal(self, command):
 
-        write_txt_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
-                                                          'mat-sidenav-content/div/div/home-screen/div/mat-grid-list/'
-                                                          'div/mat-grid-tile[2]/figure/mat-card/terminal/div/div/'
-                                                          'div[2]/div[2]/textarea')
-        write_txt_obj.send_keys(Keys.ENTER)
-        time.sleep(1)
-        write_txt_obj.send_keys("clear")
-        time.sleep(1)
-        write_txt_obj.send_keys(Keys.ENTER)
-        time.sleep(5)
-        write_txt_obj.send_keys(command)
-        time.sleep(5)
-        # write_txt_obj.send_keys(Keys.ENTER)
-        write_txt_obj.send_keys(Keys.ENTER)
-        time.sleep(5)
+class ProjectEditor(Select):
 
-    def read_terminal(self):
-
-        text_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/mat-sidenav-content/'
-                                                     'div/div/home-screen/div/mat-grid-list/div/mat-grid-tile[2]/'
-                                                     'figure/mat-card/terminal')
-
-        time.sleep(1)
-        return text_obj.text
-
-    def press_dashboard_button(self):
-        dashboard_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/mat-sidenav/'
-                                                          'div/main-menu/div/ul/li[3]/mat-icon')
-        dashboard_obj.click()
-
-        time.sleep(3)
-
-    def press_plus_graph_button(self):
-        plus_button_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
-                                                            'mat-sidenav-content/div/div/dashboard-screen/div/'
-                                                            'app-recordings-screen/div/button')
-        plus_button_obj.click()
-
-        time.sleep(3)
-
-    def press_selct_graph_selector(self):
-        select_graph_obj = self.driver.find_element_by_xpath('//*[@id="mat-select-0"]/div/div[1]/span')
-        select_graph_obj.click()
-
-        time.sleep(3)
-
-    def press_graph(self):
-        graph_obj = self.driver.find_element_by_xpath('//*[@id="mat-option-1"]/span')
-        graph_obj.click()
-        time.sleep(3)
-
-    def press_graph_show(self):
-        show_graph_obj = self.driver.find_element_by_xpath('//*[@id="mat-dialog-1"]/app-external-graph-dialog/'
-                                                           'div/div[2]/button[2]/span')
-        show_graph_obj.click()
-
-        time.sleep(5)
-
-    def press_downolad_graph(self):
-        download_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
-                                                         'mat-sidenav-content/div/div/dashboard-screen/div/'
-                                                         'app-recordings-screen/div/div/div[1]/button[4]')
-        download_obj.click()
-
-        time.sleep(3)
-
-
-class TermialWindow(Select):
-
-    def press_panel_terminal(self):
+    def open_panel_terminal(self):
         terminal_onj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/button[9]')
         terminal_onj.click()
 
@@ -240,37 +219,34 @@ class TermialWindow(Select):
 
         time.sleep(1)
 
-
-class ProjectEditor(TermialWindow):
-
-    def press_apps_folder(self):
+    def apps_folder(self):
         project_editor_obj = self.driver.find_element_by_xpath('//*[@id="Apps"]/div/mat-icon[2]')
         project_editor_obj.click()
 
-    def press_adpt_folder(self):
+    def adpt_folder(self):
         project_editor_obj = self.driver.find_element_by_xpath('//*[@id="App-ADPT_CYL"]/div/mat-icon[2]')
         project_editor_obj.click()
 
-    def press_prog_adpt_folder(self):
+    def prog_adpt_folder(self):
         project_editor_obj = self.driver.find_element_by_xpath('//*[@id="App-ADPT_CYL-ul"]/mat-tree-node[1]/li/'
                                                                'div/mat-icon')
         project_editor_obj.click()
 
-    def press_save_and_load(self):
+    def save_and_load(self):
         project_editor_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                                'mat-sidenav-content/div/div/program-editor/'
                                                                'div/as-split/as-split-area[2]/as-split/'
                                                                'as-split-area[1]/div[2]/div/div/img[1]')
         project_editor_obj.click()
 
-    def press_run_programm(self):
+    def run_programm(self):
         project_editor_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                                'mat-sidenav-content/div/div/program-editor/div/'
                                                                'as-split/as-split-area[2]/as-split/as-split-area[1]/'
                                                                'div[2]/div/div/mat-icon[2]')
         project_editor_obj.click()
 
-    def press_kill_unload(self):
+    def kill_unload(self):
         kill_unload_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                             'mat-sidenav-content/div/div/program-editor/div/as-split/'
                                                             'as-split-area[2]/as-split/as-split-area[1]/div[2]/div/div/'
@@ -278,13 +254,13 @@ class ProjectEditor(TermialWindow):
         kill_unload_obj.click()
         time.sleep(3)
 
-    def press_project_editor(self):
+    def project_editor(self):
         project_editor_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                                'mat-sidenav/div/main-menu/div/ul/li[4]/mat-icon')
         project_editor_obj.click()
         time.sleep(1)
 
-    def press_io_mapping(self):
+    def io_mapping(self):
         io_mapping_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                            'mat-sidenav-content/div/div/program-editor/div/'
                                                            'as-split/as-split-area[1]/program-editor-side-menu/'
@@ -292,7 +268,7 @@ class ProjectEditor(TermialWindow):
         io_mapping_obj.click()
         time.sleep(1)
 
-    def press_maxx_io(self):
+    def maxx_io(self):
         io_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/mat-sidenav-content/'
                                                    'div/div/program-editor/div/as-split/as-split-area[2]/as-split/'
                                                    'as-split-area/io-mapping/div/as-split/as-split-area[1]/mat-tree/'
@@ -300,7 +276,7 @@ class ProjectEditor(TermialWindow):
         io_obj.click()
         time.sleep(1)
 
-    def press_maxx_inputs(self):
+    def maxx_inputs(self):
         inputs_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/mat-sidenav-content/'
                                                        'div/div/program-editor/div/as-split/as-split-area[2]/as-split/'
                                                        'as-split-area/io-mapping/div/as-split/as-split-area[1]/'
@@ -308,7 +284,7 @@ class ProjectEditor(TermialWindow):
         inputs_obj.click()
         time.sleep(3)
 
-    def press_maxx_outputs(self):
+    def maxx_outputs(self):
         outputs_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                         'mat-sidenav-content/'
                                                         'div/div/program-editor/div/as-split/as-split-area[2]/as-split/'
@@ -316,6 +292,9 @@ class ProjectEditor(TermialWindow):
                                                         'mat-tree/mat-nested-tree-node[2]/li/ul/mat-tree-node[2]/li')
         outputs_obj.click()
         time.sleep(3)
+
+
+class IO(ProjectEditor):
 
     def read_status_in5(self):
         input5_obj = self.driver.find_element_by_xpath('//*[@id="mat-slide-toggle-5-input"]')
@@ -402,11 +381,35 @@ class ProjectEditor(TermialWindow):
         time.sleep(1)
 
 
-class Home(TermialWindow):
+class Home(Select):
 
     def power_button(self):
         self.power_button_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/button[4]')
         self.power_button_obj.click()
 
-# obj = Select("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
-# obj.open_cs()
+    def write_terminal(self, command):
+
+        write_txt_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
+                                                          'mat-sidenav-content/div/div/home-screen/div/mat-grid-list/'
+                                                          'div/mat-grid-tile[2]/figure/mat-card/terminal/div/div/'
+                                                          'div[2]/div[2]/textarea')
+        write_txt_obj.send_keys(Keys.ENTER)
+        time.sleep(1)
+        write_txt_obj.send_keys("clear")
+        time.sleep(1)
+        write_txt_obj.send_keys(Keys.ENTER)
+        time.sleep(5)
+        write_txt_obj.send_keys(command)
+        time.sleep(5)
+        # write_txt_obj.send_keys(Keys.ENTER)
+        write_txt_obj.send_keys(Keys.ENTER)
+        time.sleep(5)
+
+    def read_terminal(self):
+
+        text_obj = self.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/mat-sidenav-content/'
+                                                     'div/div/home-screen/div/mat-grid-list/div/mat-grid-tile[2]/'
+                                                     'figure/mat-card/terminal')
+
+        time.sleep(1)
+        return text_obj.text

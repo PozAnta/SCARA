@@ -1,0 +1,28 @@
+s vargains.axis.desc[0][0] {"SystemType":"SCARA","AxisName":"axis1","AxisState":["axis1_full;-130;130"],"AxisUnits":"Deg"}
+s vargains.axis.desc[0][1] {"SystemType":"SCARA","AxisName":"axis2","AxisState":["axis2_full;-140;140"],"AxisUnits":"Deg"}
+s vargains.axis.desc[0][2] {"SystemType":"SCARA","AxisName":"axis3","AxisState":["axis3_full;-140;40"],"AxisUnits":"mm"}
+s vargains.axis.desc[0][3] {"SystemType":"SCARA","AxisName":"axis4","AxisState":["axis4_full;-350;350"],"AxisUnits":"Deg"}
+
+s vargains.inuse[0][0] 1
+s vargains.inuse[0][1] 1
+s vargains.inuse[0][2] 1
+s vargains.inuse[0][3] 0
+s vargains.inuse[0][4] 0
+s vargains.inuse[0][5] 0
+s vargains.inuse[0][6] 0
+s vargains.inuse[0][7] 0
+s vargains.inuse[0][8] 0
+s vargains.inuse[0][9] 0
+
+s vargains.gainset.desc[0][0] {"axis1":"axis1_full","axis2":"axis2_full","axis3":"axis3_full","axis4":"axis4_full","Payload":"0.0"}
+s vargains.gainset.desc[0][1] {"axis1":"axis1_full","axis2":"axis2_full","axis3":"axis3_full","axis4":"axis4_full","Payload":"3.0"}
+s vargains.gainset.desc[0][2] {"axis1":"axis1_full","axis2":"axis2_full","axis3":"axis3_full","axis4":"axis4_full","Payload":"6.0"}
+
+s vargains.enable[0] 1
+s vargains.execute[0] 1
+s control.execute[1] 1 
+s control.execute[2] 1 
+s control.execute[3] 1 
+s control.execute[4] 1 
+
+

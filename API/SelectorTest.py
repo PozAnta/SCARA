@@ -7,6 +7,7 @@ class TestHome(unittest.TestCase):
     def setUp(self):
         self.home = Selector.Home("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
         self.home.open_cs()
+        #comment
 
     def test_power_button(self):
         self.assertTrue(self.home.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/div[2]/button')

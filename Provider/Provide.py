@@ -14,25 +14,6 @@ class Main:
         self._mc_terminal = Selector.Select(self.ip, self.path, self.user, self.password)
 
 
-class Terminal(Main):
-
-    def connect(self):
-
-        self._mc_terminal.open_cs()
-
-    def write(self, command):
-        self._mc_terminal.write_terminal(command)
-
-    def read(self, command):
-        out = str(self._mc_terminal.read_terminal())
-        out = out[out.find(command) + len(command):]
-        out = out[:out.find("-->")]
-        out = out.replace("\n", "")
-        # print(out)
-        time.sleep(1)
-        return out
-
-
 class CommunicationSerial:
 
     def __init__(self, port):
@@ -60,72 +41,6 @@ class CommunicationTelnet:
 
     def telnet_write_read(self, cmd):
         return self.__tn.write_read(cmd)
-
-
-class Motion(Terminal, CommunicationTelnet):
-
-    def open_jog_panel_enable(self):
-        self._mc_terminal.press_jog_panel()
-
-    def enable_disable_jog(self):
-        self._mc_terminal.press_enable_disable_in_jog_panel()
-
-    def close_jog_panel(self):
-        self._mc_terminal.press_close_jog_panel()
-
-    def j1_negative_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j1_negative_movement(duration)
-
-    def j1_positive_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j1_positive_movement(duration)
-
-    def j2_negative_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j2_negative_movement(duration)
-
-    def j2_positive_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j2_positive_movement(duration)
-
-    def j3_negative_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j3_negative_movement(duration)
-
-    def j3_positive_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j3_positive_movement(duration)
-
-    def j4_negative_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j4_negative_movement(duration)
-
-    def j4_positive_motion(self, duration):
-        if duration <= 0:
-            print("Wrong value of duration")
-            return
-        self._mc_terminal.press_j4_positive_movement(duration)
-
-    def slide_velocity(self):
-        self._mc_terminal.slide_jog_velocity()
-
-    def open_jog_set(self):
-        self._mc_terminal.slide_jog_velocity()
 
 
 class InputOutput:
@@ -323,13 +238,17 @@ class RecoveryPowerCycle(EnableDisable):
 
 class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
 
-    def __init__(self, ip, path, user, password):
+    def __init__(self, ip="192.168.0.1", path="C:\\WebDriver\\Test\\chromedriver.exe", user="admin", password="ADMIN"):
         super().__init__()
         self.ip = ip
         self.path = path
         self.user = user
         self.password = password
         self.serial_port = "COM4"
+
+        self.path_full_config = 'C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\config_full.txt'
+        self.path_part_config = 'C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\config_part.txt'
+        self.path_params = 'C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\'
 
         # self._mc_project = Selector.Home(self.ip, self.path, self.user, self.password)
         # self._mc_script = Selector.ProjectEditor(self.ip, self.path, self.user, self.password)
@@ -529,11 +448,11 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         matrix = [[0 for k in range(w)] for d in range(h)]
         count = 0
 
-        for parametr in self.actual_gains_params:
+        for parameter in self.actual_gains_params:
             for i in range(4):
                 try:
-                    result.append(self.telnet_write_read("?" + parametr + "[" + str(i+1) + "]"))
-                    result1.append(self.telnet_write_read("?" + parametr + "[" + str(i + 1) + "]"))
+                    result.append(self.telnet_write_read("?" + parameter + "[" + str(i+1) + "]"))
+                    result1.append(self.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]"))
 
                 except ValueError:
                     return False
@@ -548,12 +467,12 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         w, h = 4, len(self.gains_params)
         matrix = [[0 for k in range(w)] for d in range(h)]
         count = 0
-        for parametr in self.gains_params:
+        for parameter in self.gains_params:
             for i in range(4):
                 try:
                     # print("?" + parametr + "[" + str(i+1) + "]" + "[" + str(num_gainset) + "]")
-                    result.append(self.telnet_write_read("?" + parametr + "[" + str(i+1) + "]" +
-                                                                  "[" + str(num_gainset) + "]"))
+                    result.append(self.telnet_write_read("?" + parameter + "[" + str(i+1) + "]" + "[" + str(num_gainset)
+                                                         + "]"))
 
                 except ValueError:
                     return False
@@ -572,10 +491,24 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
                 return False
         self.telnet_write_read(self.__execute_vargains + "=1")
 
-    def write_params2drive(self, num_axis):
+    def __write_params2drive(self, num_axis, display_out):
 
-        path = 'C:\\Python\\Scara\\VGain\\Script\\axis' + str(num_axis) + '.txt'
+        path = self.path_params + '\\axis' + str(num_axis) + '.txt'
         datafile = open(path, 'r')
+        stringfiles = datafile.read()
+        split_data = stringfiles.split("\n")
+        if display_out:
+            print(split_data)
+        for i in split_data:
+            self.telnet_write_read("s " + str(i))
+
+        self.perform_execute()
+        if display_out:
+            print(self.wrn_status())
+
+    def __write_part_configuration_gainset2drive(self):
+
+        datafile = open(self.path_part_config, 'r')
         stringfiles = datafile.read()
         split_data = stringfiles.split("\n")
         print(split_data)
@@ -585,9 +518,8 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         self.perform_execute()
         print(self.wrn_status())
 
-    def write_partconfiguration_gainset2drive(self):
-        path = 'C:\\Python\\Scara\\VGain\\Script\\config_part.txt'
-        datafile = open(path, 'r')
+    def __write_full_configuration_gainset2drive(self):
+        datafile = open(self.path_full_config, 'r')
         stringfiles = datafile.read()
         split_data = stringfiles.split("\n")
         print(split_data)
@@ -597,22 +529,12 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         self.perform_execute()
         print(self.wrn_status())
 
-    def write_fullconfiguration_gainset2drive(self):
-        path = 'C:\\Python\\Scara\\VGain\\Script\\config_full.txt'
-        datafile = open(path, 'r')
-        stringfiles = datafile.read()
-        split_data = stringfiles.split("\n")
-        print(split_data)
-        for i in split_data:
-            self.telnet_write_read("s " + str(i))
+    def write2drive_params_and_full_config(self, display_out):
+        try:
+            for axis in range(4):
+                self.__write_params2drive(axis+1, display_out)
+            self.__write_full_configuration_gainset2drive()
+            return True
+        except:
+            return False
 
-        self.perform_execute()
-        print(self.wrn_status())
-
-
-# obj = VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
-# obj.write_params2drive(1)
-# obj.write_params2drive(2)
-# obj.write_params2drive(3)
-# obj.write_params2drive(4)
-# obj.write_partconfiguration_gainset2drive()

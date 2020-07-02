@@ -11,19 +11,19 @@ class TestHome(unittest.TestCase):
     def test_power_button(self):
         self.assertTrue(self.home.driver.find_element_by_xpath('//*[@id="container"]/mat-toolbar/div/div[2]/button')
                          .is_displayed())
-        self.home.close_cs()
 
     def test_write_terminal(self):
         self.assertTrue(self.home.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/'
                                                           'mat-sidenav-content/div/div/home-screen/div/mat-grid-list/'
                                                           'div/mat-grid-tile[2]/figure/mat-card/terminal/div/div/'
                                                           'div[2]/div[2]/textarea').is_displayed())
-        self.home.close_cs()
 
     def test_read_terminal(self):
         self.assertTrue(self.home.driver.find_element_by_xpath('//*[@id="container"]/mat-sidenav-container/mat-sidenav-content/'
                                                      'div/div/home-screen/div/mat-grid-list/div/mat-grid-tile[2]/'
                                                      'figure/mat-card/terminal').is_displayed())
+
+    def tearDown(self):
         self.home.close_cs()
 
 

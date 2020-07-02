@@ -4,7 +4,7 @@ from colorama import Fore, Style
 
 class Main:
 
-    def __init__(self, name_test):
+    def __init__(self, name_test="NA"):
 
         self.test = Provide.VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
         # self.test.connect_cs()
@@ -189,6 +189,14 @@ class Support(Main):
         print("Params for gainset 1: ", self.test.read_cntrl_params_from_drive(1))
         print("Params for gainset 2: ", self.test.read_cntrl_params_from_drive(2))
 
+    def set_full_range_config(self):
+        if self.test.write2drive_params_and_full_config(False):
+            print(Fore.GREEN + "Set parameters - OK")
+            print(Style.RESET_ALL)
+        else:
+            print(Fore.RED + "Set parameters - FAIL")
+            print(Style.RESET_ALL)
+
 
 class Test(Support):
 
@@ -301,14 +309,13 @@ class Test(Support):
         pass
 
     def partial_endeff_low_high_test(self):
-        for axis_num in range(4):
-            self.test.write_params2drive(axis_num + 1)
-
-        self.test.write_partconfiguration_gainset2drive()
+        pass
 
     def partial_endeff_high_low_test(self):
         pass
 
 
-obj = Test("End effector partial test")
-obj.partial_endeff_low_high_test()
+# obj = Test("End effector partial test")
+# obj.partial_endeff_low_high_test()
+obj = Support()
+obj.set_full_range_config()

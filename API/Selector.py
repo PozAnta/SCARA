@@ -389,5 +389,5 @@ class Home(Select):
         return text_obj.text
 
 
-obj = Select("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
-obj.open_cs()
+# obj = Select("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
+# obj.open_cs()

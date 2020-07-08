@@ -29,7 +29,8 @@ class Data:
         return result
 
     def read_by_id(self, id_search):
-        select_str = "select " + self.column_name + ", " + self.column_name + " from " + self.table + " WHERE Id=" + id_search
+        select_str = "select " + self.column_name + ", " + self.column_name + " from " + self.table + " WHERE Id=" +\
+                     id_search
         self.cur.execute(select_str)
         rows = self.cur.fetchall()
         result = []
@@ -37,15 +38,9 @@ class Data:
             result.append(row[0])
         return result
 
-'''
 
-column_name = 'Name'
-location_val = 6
-update_val = "BadDay"
-read_column_data(table, column_name)
-read_by_id(table, column_name, "0")
-'''
-
-
-
-
+# column_name = 'Name'
+# location_val = 6
+# update_val = "BadDay"
+# read_column_data(table, column_name)
+# read_by_id(table, column_name, "0")

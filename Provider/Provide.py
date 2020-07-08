@@ -6,7 +6,6 @@ from colorama import Fore
 class Main:
 
     def __init__(self, ip, path, user, password):
-
         self.ip = ip
         self.path = path
         self.user = user
@@ -158,7 +157,6 @@ class InputOutput:
         result = []
         self.io.open_panel_terminal()
         for i in range(16):
-
             out = str(1000 + i)
             print("Read out: " + out)
             result.append(self.io.write_panel_terminal("?sys.dout[" + out + "]"))
@@ -283,8 +281,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         result = []
         for i in range(4):
             try:
-                result.append(self.telnet_write_read("?" + self.vargain_axis_disc + "[0]" +
-                                                              "[" + str(i) + "]"))
+                result.append(self.telnet_write_read("?" + self.vargain_axis_disc + "[0]" + "[" + str(i) + "]"))
             except ValueError:
                 return result
         return result
@@ -293,8 +290,8 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         index = 0
         for i in command:
             try:
-               self.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
-               index += 1
+                self.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
+                index += 1
 
             except ValueError:
                 return False
@@ -303,8 +300,8 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         index = 0
         for i in command:
             try:
-               self.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
-               index += 1
+                self.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
+                index += 1
 
             except:
                 return False
@@ -318,7 +315,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
 
     def read_single_axis_description(self, axis_set):
         try:
-           result = self.telnet_write_read("?" + self.vargain_axis_disc + axis_set)
+            result = self.telnet_write_read("?" + self.vargain_axis_disc + axis_set)
         except ValueError:
             return False
 
@@ -386,7 +383,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         result = []
         self.open_panel_terminal()
         for i in range(4):
-            result.append(self.write_panel_terminal("?a" + str(i+1) + ".pfac"))
+            result.append(self.write_panel_terminal("?a" + str(i + 1) + ".pfac"))
         self.press_close_terminal()
         return result
 
@@ -398,7 +395,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         pden_1 = float(self.write_panel_terminal("?ec_sdo_read(1,0x6092,1)"))
 
         self.press_close_terminal()
-        return (pden_2/pden_1)*(pnum_2/pnum_1)
+        return (pden_2 / pden_1) * (pnum_2 / pnum_1)
 
     def read_direction(self):
         result = []
@@ -422,8 +419,8 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         for i in range(4):
             for j in range(4):
                 try:
-                    result.append(self.telnet_write_read("?vargains.axis.cplg" + "[" + str(i+1) + "]" +
-                                                                  "[" + str(j) + "]"))
+                    result.append(self.telnet_write_read("?vargains.axis.cplg" + "[" + str(i + 1) + "]" +
+                                                         "[" + str(j) + "]"))
                 except ValueError:
                     return False
         return result
@@ -435,7 +432,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
             for j in range(4):
                 try:
                     result.append(self.write_panel_terminal(
-                        "?cplg" + "[" + str(i+1) + "]" + "[" + str(j+1) + "]"))
+                        "?cplg" + "[" + str(i + 1) + "]" + "[" + str(j + 1) + "]"))
                 except ValueError:
                     return False
         self.press_close_terminal()
@@ -451,7 +448,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         for parameter in self.actual_gains_params:
             for i in range(4):
                 try:
-                    result.append(self.telnet_write_read("?" + parameter + "[" + str(i+1) + "]"))
+                    result.append(self.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]"))
                     result1.append(self.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]"))
 
                 except ValueError:
@@ -471,8 +468,9 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
             for i in range(4):
                 try:
                     # print("?" + parametr + "[" + str(i+1) + "]" + "[" + str(num_gainset) + "]")
-                    result.append(self.telnet_write_read("?" + parameter + "[" + str(i+1) + "]" + "[" + str(num_gainset)
-                                                         + "]"))
+                    result.append(
+                        self.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]" + "[" + str(num_gainset)
+                                               + "]"))
 
                 except ValueError:
                     return False
@@ -486,7 +484,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
     def perform_execute(self):
         for i in range(4):
             try:
-                self.telnet_write_read(self.__cntrl_execute + "["+str(i+1)+"]=1")
+                self.telnet_write_read(self.__cntrl_execute + "[" + str(i + 1) + "]=1")
             except ValueError:
                 return False
         self.telnet_write_read(self.__execute_vargains + "=1")
@@ -532,9 +530,8 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
     def write2drive_params_and_full_config(self, display_out):
         try:
             for axis in range(4):
-                self.__write_params2drive(axis+1, display_out)
+                self.__write_params2drive(axis + 1, display_out)
             self.__write_full_configuration_gainset2drive()
             return True
         except:
             return False
-

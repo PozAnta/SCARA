@@ -62,14 +62,14 @@ class Support(Main):
         print(Fore.LIGHTBLUE_EX + "  --> Read changed values from drive")
         result = self.test.read_axis_description()
         count = 0
-        print(Fore.LIGHTBLUE_EX + "  --> Compare values from drive to sanded")
+        print(Fore.LIGHTBLUE_EX + "\t\t--> Compare values from drive to sanded")
         for i in result:
             if i.find(self.decsription[count]) != -1:
-                print(Fore.GREEN + "    --Compare vargains.axis.desc with read value PASS--")
+                print(Fore.GREEN + "\t\t\t--Compare vargains.axis.desc with read value PASS--")
                 print(i)
                 print(Style.RESET_ALL)
             else:
-                print(Fore.RED + "    --Compare vargains.axis.desc with read value FAIL--")
+                print(Fore.RED + "\t\t\t--Compare vargains.axis.desc with read value FAIL--")
                 print(i)
                 print(Style.RESET_ALL)
                 self.status = False

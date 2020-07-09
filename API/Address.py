@@ -4,9 +4,9 @@ from configparser import ConfigParser
 class Address:
     def __init__(self):
         self.dict_obj = {}
-        self.__load_objects()
+        self.load_objects()
 
-    def __load_objects(self):
+    def load_objects(self):
         config = ConfigParser()
         config.read('SeleniumAddrs.ini')
 
@@ -18,10 +18,11 @@ class Address:
                 print("exception on %s!" % section)
                 self.dict_obj[section] = None
 
-        # print(self.dict_obj)
+        print(self.dict_obj)
 
     def obj_address(self, name_object):
         # print("Name: ", name_object)
+        print(self.dict_obj)
         return self.dict_obj.get(name_object)
 
 

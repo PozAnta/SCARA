@@ -234,10 +234,9 @@ class RecoveryPowerCycle(EnableDisable):
         self.proj_editor.kill_unload()
 
 
-class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
+class VariableGains:
 
-    def __init__(self, ip="192.168.0.1", path="C:\\WebDriver\\Test\\chromedriver.exe", user="admin", password="ADMIN"):
-        super().__init__()
+    def __init__(self, ip, path, user, password):
         self.ip = ip
         self.path = path
         self.user = user
@@ -249,8 +248,8 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         self.path_params = 'C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\'
 
         # self._mc_project = Selector.Home(self.ip, self.path, self.user, self.password)
-        # self._mc_script = Selector.ProjectEditor(self.ip, self.path, self.user, self.password)
-        # self.tel_comm = CommunicationTelnet()
+        self.mc_script = Selector.ProjectEditor(self.ip, self.path, self.user, self.password)
+        self.tel_comm = CommunicationTelnet()
 
         self.vargain_axis_disc = "vargains.axis.desc"
         self.vargain_enable = "vargains.enable"
@@ -281,7 +280,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         result = []
         for i in range(4):
             try:
-                result.append(self.telnet_write_read("?" + self.vargain_axis_disc + "[0]" + "[" + str(i) + "]"))
+                result.append(self.tel_comm.telnet_write_read("?" + self.vargain_axis_disc + "[0]" + "[" + str(i) + "]"))
             except ValueError:
                 return result
         return result
@@ -290,7 +289,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         index = 0
         for i in command:
             try:
-                self.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
+                self.tel_comm.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
                 index += 1
 
             except ValueError:
@@ -300,7 +299,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         index = 0
         for i in command:
             try:
-                self.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
+                self.tel_comm.telnet_write(self.vargain_axis_disc + "[0]" + "[" + str(index) + "]" + "=" + i)
                 index += 1
 
             except:
@@ -308,14 +307,14 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
 
     def write_single_axis_description(self, command, axis_set):
         try:
-            self.telnet_write(self.vargain_axis_disc + axis_set + "=" + command)
+            self.tel_comm.telnet_write(self.vargain_axis_disc + axis_set + "=" + command)
 
         except:
             return False
 
     def read_single_axis_description(self, axis_set):
         try:
-            result = self.telnet_write_read("?" + self.vargain_axis_disc + axis_set)
+            result = self.tel_comm.telnet_write_read("?" + self.vargain_axis_disc + axis_set)
         except ValueError:
             return False
 
@@ -323,7 +322,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
 
     def enable_vargains(self):
         try:
-            result = self.telnet_write_read(self.vargain_enable + "=1")
+            result = self.tel_comm.telnet_write_read(self.vargain_enable + "=1")
         except ValueError:
             return False
 
@@ -331,7 +330,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
 
     def disable_vargains(self):
         try:
-            result = self.telnet_write_read(self.vargain_enable + "=0")
+            result = self.tel_comm.telnet_write_read(self.vargain_enable + "=0")
         except ValueError:
             return False
 
@@ -340,14 +339,14 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
     def execute_vargains(self):
 
         try:
-            result = self.telnet_write_read(self.__execute_vargains + "=1")
+            result = self.tel_comm.telnet_write_read(self.__execute_vargains + "=1")
         except ValueError:
             return False
         return result
 
     def dis_execute_vargains(self):
         try:
-            result = self.telnet_write_read(self.__execute_vargains + "=0")
+            result = self.tel_comm.telnet_write_read(self.__execute_vargains + "=0")
         except ValueError:
             return False
         return result
@@ -356,7 +355,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         st1 = []
         for i in range(4):
             try:
-                result = self.telnet_write_read("status" + " " + str(i + 1))
+                result = self.tel_comm.telnet_write_read("status" + " " + str(i + 1))
                 # print(result)
                 result = result[result.find("Active Warnings") + len("Active Warnings") + 1:result.find("PFB")]
                 st1.append(result)
@@ -370,46 +369,46 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         result = []
         for i in range(4):
             try:
-                result.append(self.telnet_write_read("?wrn.exist" + "[" + str(i + 1) + "]"))
+                result.append(self.tel_comm.telnet_write_read("?wrn.exist" + "[" + str(i + 1) + "]"))
             except ValueError:
                 return False
         return result
 
     def connect_cs(self):
         # self._mc_project = Selector.Home(self.ip, self.path, self.user, self.password)
-        self.open_cs()
+        self.mc_script.open_cs()
 
     def read_pfac_from_terminal(self):
         result = []
-        self.open_panel_terminal()
+        self.mc_script.open_panel_terminal()
         for i in range(4):
-            result.append(self.write_panel_terminal("?a" + str(i + 1) + ".pfac"))
-        self.press_close_terminal()
+            result.append(self.mc_script.write_panel_terminal("?a" + str(i + 1) + ".pfac"))
+        self.mc_script.press_close_terminal()
         return result
 
     def read_gear_feed(self):
-        self.open_panel_terminal()
-        pnum_2 = float(self.write_panel_terminal("?ec_sdo_read(1,0x6091,2)"))
-        pnum_1 = float(self.write_panel_terminal("?ec_sdo_read(1,0x6091,1)"))
-        pden_2 = float(self.write_panel_terminal("?ec_sdo_read(1,0x6092,2)"))
-        pden_1 = float(self.write_panel_terminal("?ec_sdo_read(1,0x6092,1)"))
+        self.mc_script.open_panel_terminal()
+        pnum_2 = float(self.mc_script.write_panel_terminal("?ec_sdo_read(1,0x6091,2)"))
+        pnum_1 = float(self.mc_script.write_panel_terminal("?ec_sdo_read(1,0x6091,1)"))
+        pden_2 = float(self.mc_script.write_panel_terminal("?ec_sdo_read(1,0x6092,2)"))
+        pden_1 = float(self.mc_script.write_panel_terminal("?ec_sdo_read(1,0x6092,1)"))
 
-        self.press_close_terminal()
+        self.mc_script.press_close_terminal()
         return (pden_2 / pden_1) * (pnum_2 / pnum_1)
 
     def read_direction(self):
         result = []
-        self.open_panel_terminal()
+        self.mc_script.open_panel_terminal()
         for i in range(4):
-            result.append(self.write_panel_terminal("?a" + str(i + 1) + ".direction"))
-        self.press_close_terminal()
+            result.append(self.mc_script.write_panel_terminal("?a" + str(i + 1) + ".direction"))
+        self.mc_script.press_close_terminal()
         return result
 
     def read_posfactor_from_drive(self):
         result = []
         for i in range(4):
             try:
-                result.append(self.telnet_write_read("?vargains.axis.posfactor" + "[" + str(i + 1) + "]"))
+                result.append(self.tel_comm.telnet_write_read("?vargains.axis.posfactor" + "[" + str(i + 1) + "]"))
             except ValueError:
                 return False
         return result
@@ -419,7 +418,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         for i in range(4):
             for j in range(4):
                 try:
-                    result.append(self.telnet_write_read("?vargains.axis.cplg" + "[" + str(i + 1) + "]" +
+                    result.append(self.tel_comm.telnet_write_read("?vargains.axis.cplg" + "[" + str(i + 1) + "]" +
                                                          "[" + str(j) + "]"))
                 except ValueError:
                     return False
@@ -427,15 +426,15 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
 
     def read_coupling_factor_from_mc(self):
         result = []
-        self.open_panel_terminal()
+        self.mc_script.open_panel_terminal()
         for i in range(4):
             for j in range(4):
                 try:
-                    result.append(self.write_panel_terminal(
+                    result.append(self.mc_script.write_panel_terminal(
                         "?cplg" + "[" + str(i + 1) + "]" + "[" + str(j + 1) + "]"))
                 except ValueError:
                     return False
-        self.press_close_terminal()
+        self.mc_script.press_close_terminal()
         return result
 
     def read_cntrl_act_params_from_drive(self):
@@ -448,8 +447,8 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         for parameter in self.actual_gains_params:
             for i in range(4):
                 try:
-                    result.append(self.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]"))
-                    result1.append(self.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]"))
+                    result.append(self.tel_comm.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]"))
+                    result1.append(self.tel_comm.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]"))
 
                 except ValueError:
                     return False
@@ -469,7 +468,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
                 try:
                     # print("?" + parametr + "[" + str(i+1) + "]" + "[" + str(num_gainset) + "]")
                     result.append(
-                        self.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]" + "[" + str(num_gainset)
+                        self.tel_comm.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]" + "[" + str(num_gainset)
                                                + "]"))
 
                 except ValueError:
@@ -484,10 +483,10 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
     def perform_execute(self):
         for i in range(4):
             try:
-                self.telnet_write_read(self.__cntrl_execute + "[" + str(i + 1) + "]=1")
+                self.tel_comm.telnet_write_read(self.__cntrl_execute + "[" + str(i + 1) + "]=1")
             except ValueError:
                 return False
-        self.telnet_write_read(self.__execute_vargains + "=1")
+        self.tel_comm.telnet_write_read(self.__execute_vargains + "=1")
 
     def __write_params2drive(self, num_axis, display_out):
 
@@ -498,7 +497,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         if display_out:
             print(split_data)
         for i in split_data:
-            self.telnet_write_read("s " + str(i))
+            self.tel_comm.telnet_write_read("s " + str(i))
 
         self.perform_execute()
         if display_out:
@@ -511,7 +510,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         split_data = stringfiles.split("\n")
         print(split_data)
         for i in split_data:
-            self.telnet_write_read("s " + str(i))
+            self.tel_comm.telnet_write_read("s " + str(i))
 
         self.perform_execute()
         print(self.wrn_status())
@@ -522,7 +521,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
         split_data = stringfiles.split("\n")
         print(split_data)
         for i in split_data:
-            self.telnet_write_read("s " + str(i))
+            self.tel_comm.telnet_write_read("s " + str(i))
 
         self.perform_execute()
         print(self.wrn_status())
@@ -535,3 +534,7 @@ class VariableGains(CommunicationTelnet, Selector.ProjectEditor):
             return True
         except:
             return False
+
+
+obj = VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
+obj.connect_cs()

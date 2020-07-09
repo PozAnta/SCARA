@@ -15,7 +15,7 @@ class Select:
         self.path_chrome_driver = path_web_driver
         self.ip = "http://" + ip + ":1207/rs/login"
         self.driver = webdriver.Chrome(self.path_chrome_driver)
-        self.login = Login()
+        self.login_m = Login()
         self.pr_edit = ProjectEditorSection()
         self.home = HomeSection()
 
@@ -26,12 +26,12 @@ class Select:
         self.driver.set_page_load_timeout(50)
         count = 0
         while count < 10:
-
             try:
                 self.driver.get(self.ip)
                 time.sleep(10)
                 # self.driver.maximize_window()
-                self.driver.find_element_by_xpath(self.login.open_cs_addr())
+                print("return", self.login_m.open_cs_addr())
+                self.driver.find_element_by_xpath(self.login_m.open_cs_addr())
                 break
             except NoSuchElementException:
                 count += 1
@@ -275,7 +275,7 @@ class ProjectEditor(Select):
         time.sleep(3)
 
 
-class IO(ProjectEditor):
+class IO(Select):
 
     def read_status_in5(self):
         input5_obj = self.driver.find_element_by_xpath('//*[@id="mat-slide-toggle-5-input"]')
@@ -389,5 +389,5 @@ class Home(Select):
         return text_obj.text
 
 
-# obj = Select("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
+# obj = ProjectEditor("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
 # obj.open_cs()

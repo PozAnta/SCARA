@@ -89,7 +89,7 @@ class Support(Main):
             self.status = False
 
     def ckeck_description_readable(self):
-        print(Fore.LIGHTBLUE_EX + "  --> Check that vargains.axis.desc is readable")
+        print(Fore.LIGHTBLUE_EX + "\t\t--> Check that vargains.axis.desc is readable")
         end_status = True
         result = self.test.read_axis_description()
         for i in result:
@@ -102,10 +102,10 @@ class Support(Main):
                 end_status = True
 
         if end_status:
-            print(Fore.GREEN + "    --The check vargains.axis.desc is readable PASS--")
+            print(Fore.GREEN + "\t\t\t\t--The check vargains.axis.desc is readable PASS--")
             print(Style.RESET_ALL)
         else:
-            print(Fore.RED + "    --The check vargains.axis.desc is readable FAIL--")
+            print(Fore.RED + "\t\t\t\t--The check vargains.axis.desc is readable FAIL--")
             print(Style.RESET_ALL)
             self.status = False
 
@@ -202,12 +202,11 @@ class Test(Support):
 
     def vargains_description_test(self):
         print(Fore.LIGHTBLUE_EX + "-----Start " + self.name_test + " test----")
-
-        # self.ckeck_desscription_readable()
+        self.ckeck_description_readable()
         # self.change_description_axis()
 
         # self.test.write_single_axis_description(self.decsription_neg, "[0][4]")
-        print(self.test.read_single_axis_description("[0][4]"))
+        # print(self.test.read_single_axis_description("[0][4]"))
 
         if self.status:
             print(Fore.GREEN + "--End " + self.name_test + " test with status PASS--")
@@ -245,15 +244,19 @@ class Test(Support):
 
     def posfactor_test(self):
         print(Fore.LIGHTBLUE_EX + "-----Start " + self.name_test + " test----")
-        print(Fore.LIGHTBLUE_EX + "  --> Perform communication with CS+")
+        print(Fore.LIGHTBLUE_EX + "\t\t--> Perform communication with CS+")
         self.test.connect_cs()
-        print(Fore.LIGHTBLUE_EX + "  --> Read pfac value from MC")
+
+        print(Fore.LIGHTBLUE_EX + "\t\t--> Read pfac value from MC")
         result_pfac = self.test.read_pfac_from_terminal()
-        print(Fore.LIGHTBLUE_EX + "  --> Read direction value from MC")
+
+        print(Fore.LIGHTBLUE_EX + "\t\t--> Read direction value from MC")
         result_dir = self.test.read_direction()
-        print(Fore.LIGHTBLUE_EX + "  --> Read gear feed factor value from MC")
+
+        print(Fore.LIGHTBLUE_EX + "\t\t--> Read gear feed factor value from MC")
         result_gear = self.test.read_gear_feed()
-        print(Fore.LIGHTBLUE_EX + "  --> Read variable.gain.posfactor value from MC")
+
+        print(Fore.LIGHTBLUE_EX + "\t\t--> Read variable.gain.posfactor value from MC")
         drive_posfactor = self.test.read_posfactor_from_drive()
         self.check_posfactor(result_pfac, result_dir, result_gear, drive_posfactor)
 
@@ -314,8 +317,5 @@ class Test(Support):
     def partial_endeff_high_low_test(self):
         pass
 
-
-# obj = Test("End effector partial test")
-# obj.partial_endeff_low_high_test()
-obj = Support()
-obj.set_full_range_config()
+obj = Test()
+obj.posfactor_test()

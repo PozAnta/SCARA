@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import QProgressBar
 
 from API import SQL
-from Tests import VariableGains
+from Tests.VariableGains import GainSckeduling
 
 
 class MyThread(QThread):
@@ -82,8 +82,10 @@ class App(QWidget):
     def start(self):
         count = 0
         # print(self.selected_tests)
-        dic = {0: VariableGains.GainSckeduling.Test("Post Factor").posfactor_test(),
-               1: VariableGains.GainSckeduling.Test("Coupling").cplg_test()}
+        test = GainSckeduling.Test("Post Factor")
+
+        dic = {0: test.posfactor_test(),
+               1: GainSckeduling.Test("Coupling").cplg_test()}
         for test in self.selected_tests:
             if bool(test):
                 print("Selected test: ", self.tests[count])

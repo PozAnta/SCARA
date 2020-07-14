@@ -30,7 +30,7 @@ class Select:
                 self.driver.get(self.ip)
                 time.sleep(10)
                 # self.driver.maximize_window()
-                print("return", self.login_m.open_cs_addr())
+                # print("return", self.login_m.open_cs_addr())
                 self.driver.find_element_by_xpath(self.login_m.open_cs_addr())
                 break
             except NoSuchElementException:
@@ -196,8 +196,7 @@ class ProjectEditor(Select):
         time.sleep(3)
 
     def write_panel_terminal(self, command):
-        write_txt_obj = self.driver.find_element_by_xpath('//*[@id="container"]/div[2]/terminal-window/terminal/'
-                                                          'div/div/div[2]/div[2]/textarea')
+        write_txt_obj = self.driver.find_element_by_xpath(self.pr_edit.write_panel_terminal_addr())
         write_txt_obj.send_keys(Keys.ENTER)
         time.sleep(1)
         write_txt_obj.send_keys("clear")
@@ -221,24 +220,27 @@ class ProjectEditor(Select):
     def press_close_terminal(self):
         close_term_obj = self.driver.find_element_by_xpath(self.pr_edit.press_close_terminal_addr())
         close_term_obj.click()
-
-        time.sleep(1)
+        time.sleep(3)
 
     def apps_folder(self):
         project_editor_obj = self.driver.find_element_by_xpath(self.pr_edit.apps_folder_addr())
         project_editor_obj.click()
+        time.sleep(3)
 
     def adpt_folder(self):
         project_editor_obj = self.driver.find_element_by_xpath(self.pr_edit.adpt_folder_addr())
         project_editor_obj.click()
+        time.sleep(3)
 
     def prog_adpt_folder(self):
         project_editor_obj = self.driver.find_element_by_xpath(self.pr_edit.prog_adpt_folder_addr())
         project_editor_obj.click()
+        time.sleep(3)
 
     def save_and_load(self):
         project_editor_obj = self.driver.find_element_by_xpath(self.pr_edit.save_and_load_addr())
         project_editor_obj.click()
+        time.sleep(3)
 
     def run_programm(self):
         project_editor_obj = self.driver.find_element_by_xpath(self.pr_edit.run_programm_addr())
@@ -252,17 +254,17 @@ class ProjectEditor(Select):
     def project_editor(self):
         project_editor_obj = self.driver.find_element_by_xpath(self.pr_edit.project_editor_addr())
         project_editor_obj.click()
-        time.sleep(1)
+        time.sleep(3)
 
     def io_mapping(self):
         io_mapping_obj = self.driver.find_element_by_xpath(self.pr_edit.io_mapping_addr())
         io_mapping_obj.click()
-        time.sleep(1)
+        time.sleep(3)
 
     def maxx_io(self):
         io_obj = self.driver.find_element_by_xpath(self.pr_edit.maxx_io_addr())
         io_obj.click()
-        time.sleep(1)
+        time.sleep(3)
 
     def maxx_inputs(self):
         inputs_obj = self.driver.find_element_by_xpath(self.pr_edit.maxx_inputs_addr())
@@ -388,6 +390,10 @@ class Home(Select):
         time.sleep(1)
         return text_obj.text
 
-
-# obj = ProjectEditor("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
-# obj.open_cs()
+'''
+obj = ProjectEditor("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
+obj.open_cs()
+obj.project_editor()
+obj.open_panel_terminal()
+obj.write_panel_terminal("?ver")
+'''

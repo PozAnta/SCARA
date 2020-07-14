@@ -51,19 +51,18 @@ class TestProjectEditor(unittest.TestCase):
 
     def test_apps_folder(self):
         self.project.project_editor()
-        self.assertTrue(self.project.driver.driver.find_element_by_xpath(Address.ProjectEditorSection()
-                                                                         .apps_folder_addr())
+        self.assertTrue(self.project.driver.find_element_by_xpath(Address.ProjectEditorSection().apps_folder_addr())
                         .is_displayed())
 
     def test_adpt_folder(self):
         self.project.project_editor()
+        self.project.apps_folder()
         self.assertTrue(self.project.driver.find_element_by_xpath(Address.ProjectEditorSection().adpt_folder_addr())
                         .is_displayed())
 
     def test_prog_adpt_folder(self):
         self.project.project_editor()
         self.project.apps_folder()
-
         self.assertTrue(self.project.driver.find_element_by_xpath(Address.ProjectEditorSection()
                                                                   .prog_adpt_folder_addr()).is_displayed())
 

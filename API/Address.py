@@ -8,7 +8,7 @@ class Address:
 
     def load_objects(self):
         config = ConfigParser()
-        config.read('SeleniumAddrs.ini')
+        config.read('C:\\Python\\Robot\\Scara\\API\\SeleniumAddrs.ini')
 
         sections = config.sections()
         for section in sections:
@@ -18,11 +18,11 @@ class Address:
                 print("exception on %s!" % section)
                 self.dict_obj[section] = None
 
-        print(self.dict_obj)
+        # print(self.dict_obj)
 
     def obj_address(self, name_object):
         # print("Name: ", name_object)
-        print(self.dict_obj)
+        # print(self.dict_obj)
         return self.dict_obj.get(name_object)
 
 
@@ -44,7 +44,7 @@ class ProjectEditorSection(Address):
         return self.obj_address('OpenPanelTerminal')
 
     def write_panel_terminal_addr(self):
-        return self.obj_address('WriteTerminal')
+        return self.obj_address('WritePanelTerminal')
 
     def press_close_terminal_addr(self):
         return self.obj_address('ClosePanelTerminal')

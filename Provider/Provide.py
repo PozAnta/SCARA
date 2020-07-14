@@ -1,6 +1,7 @@
 import time
 from API import PortSerial, Telnet, Selector
 from colorama import Fore
+from configparser import ConfigParser
 
 
 class Main:
@@ -10,6 +11,8 @@ class Main:
         self.path = path
         self.user = user
         self.password = password
+
+
         self._mc_terminal = Selector.Select(self.ip, self.path, self.user, self.password)
 
 
@@ -243,18 +246,22 @@ class VariableGains:
         self.password = password
         self.serial_port = "COM4"
 
-        self.path_full_config = 'C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\config_full.txt'
-        self.path_part_config = 'C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\config_part.txt'
-        self.path_params = 'C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\'
+        config = ConfigParser()
+        config.read('C:\\Python\\Robot\\Scara\\Tests\\VariableGains\\Script\\configurator.ini')
+
+        self.path_full_config = config.get('PathFullConfig', 'Path')
+        self.path_part_config = config.get('PathPartConfig', 'Path')
+        self.path_negative_full_config = config.get('PathNegativeFull', 'Path')
+        self.path_params = config.get('PathParameters', 'Path')
 
         # self._mc_project = Selector.Home(self.ip, self.path, self.user, self.password)
         self.mc_script = Selector.ProjectEditor(self.ip, self.path, self.user, self.password)
         self.tel_comm = CommunicationTelnet()
 
-        self.vargain_axis_disc = "vargains.axis.desc"
-        self.vargain_enable = "vargains.enable"
-        self.__execute_vargains = "vargains.execute"
-        self.__cntrl_execute = "control.execute"
+        self.vargain_axis_disc = config.get('VarGainAxisDescription', 'Name')
+        self.vargain_enable = config.get('VarGainEnable', 'Name')
+        self.__execute_vargains = config.get('VarGainExecute', 'Name')
+        self.__cntrl_execute = config.get('VarGainCntrExecute', 'Name')
 
         self.actual_gains_params = ["vel.pdff.kp.act",
                                     "vel.pdff.kfr.act",
@@ -284,6 +291,44 @@ class VariableGains:
             except ValueError:
                 return result
         return result
+
+    def __read_write_config_parser(self, use_configuration):
+        datafile = open(use_configuration, 'r')
+        stringfiles = datafile.read()
+        split_data = stringfiles.split("\n")
+        # print(split_data)
+        for i in split_data:
+            self.tel_comm.telnet_write_read("s " + str(i))
+
+    def read_drive_version(self):
+        return self.tel_comm.telnet_write_read("?ver")
+
+    def write_negative_full_config(self):
+        self.__read_write_config_parser(self.path_negative_full_config)
+
+    def disactivate_inuse_gainset(self, number_gainset):
+        try:
+            self.tel_comm.telnet_write("vargains.inuse[0][" + str(number_gainset) + "] = 0")
+        except ValueError:
+            print("Wrong responce")
+
+    def activate_inuse_gainset(self, number_gainset):
+        try:
+            self.tel_comm.telnet_write("vargains.inuse[0][" + str(number_gainset) + "] = 1")
+        except ValueError:
+            print("Wrong responce")
+
+    def set_drive_payload(self, payload_value):
+        try:
+            self.tel_comm.telnet_write("vargains.payload = " + str(payload_value))
+        except ValueError:
+            print("Wrong responce")
+
+    def read_gainset_from_drive(self):
+        try:
+            return self.tel_comm.telnet_write_read("?vargains.active")
+        except:
+            print("Something wrong when trying to read from drive")
 
     def write_axis_description(self, command):
         index = 0
@@ -330,7 +375,7 @@ class VariableGains:
 
     def disable_vargains(self):
         try:
-            result = self.tel_comm.telnet_write_read(self.vargain_enable + "=0")
+            result = self.tel_comm.telnet_write_read(self.vargain_enable + "= 0")
         except ValueError:
             return False
 
@@ -373,6 +418,9 @@ class VariableGains:
             except ValueError:
                 return False
         return result
+
+    def disconnect_cs(self):
+        self.mc_script.close_cs()
 
     def connect_cs(self):
         # self._mc_project = Selector.Home(self.ip, self.path, self.user, self.password)
@@ -508,33 +556,45 @@ class VariableGains:
         datafile = open(self.path_part_config, 'r')
         stringfiles = datafile.read()
         split_data = stringfiles.split("\n")
-        print(split_data)
+        # print(split_data)
         for i in split_data:
-            self.tel_comm.telnet_write_read("s " + str(i))
+            self.tel_comm.telnet_write_read(str(i))
 
         self.perform_execute()
-        print(self.wrn_status())
+        # print(self.wrn_status())
 
     def __write_full_configuration_gainset2drive(self):
         datafile = open(self.path_full_config, 'r')
         stringfiles = datafile.read()
         split_data = stringfiles.split("\n")
-        print(split_data)
+        # print(split_data)
         for i in split_data:
             self.tel_comm.telnet_write_read("s " + str(i))
 
         self.perform_execute()
-        print(self.wrn_status())
+        # print(self.wrn_status())
 
     def write2drive_params_and_full_config(self, display_out):
         try:
             for axis in range(4):
+                print(Fore.LIGHTBLUE_EX + "\tSet parameters for axis " + str(axis+1))
                 self.__write_params2drive(axis + 1, display_out)
             self.__write_full_configuration_gainset2drive()
             return True
         except:
             return False
 
+    def write2drive_params_and_part_config(self, display_out):
+        try:
+            for axis in range(4):
+                print(Fore.LIGHTBLUE_EX + "\tSet parameters for axis " + str(axis+1))
+                self.__write_params2drive(axis + 1, display_out)
+            self.__write_part_configuration_gainset2drive()
+            return True
+        except:
+            return False
 
-obj = VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
-obj.connect_cs()
+
+# obj = VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
+# obj.connect_cs()
+# print(obj.read_axis_wrn_status())

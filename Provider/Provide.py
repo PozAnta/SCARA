@@ -12,7 +12,6 @@ class Main:
         self.user = user
         self.password = password
 
-
         self._mc_terminal = Selector.Select(self.ip, self.path, self.user, self.password)
 
 
@@ -256,9 +255,11 @@ class VariableGains:
 
         # self._mc_project = Selector.Home(self.ip, self.path, self.user, self.password)
         self.mc_script = Selector.ProjectEditor(self.ip, self.path, self.user, self.password)
+        self.system = Selector.SystemConfigurator(self.ip, self.path, self.user, self.password)
         self.tel_comm = CommunicationTelnet()
 
         self.vargain_axis_disc = config.get('VarGainAxisDescription', 'Name')
+        self.vargain_gainset_disc = config.get('VarGainGainsetDescription', 'Name')
         self.vargain_enable = config.get('VarGainEnable', 'Name')
         self.__execute_vargains = config.get('VarGainExecute', 'Name')
         self.__cntrl_execute = config.get('VarGainCntrExecute', 'Name')
@@ -283,11 +284,41 @@ class VariableGains:
                              "pos.kvfr",
                              "pos.kvfr.pole.f"]
 
+    def read_offset_mastering(self):
+        result = []
+        self.system.open_panel_terminal()
+        for i in range(4):
+            result.append(self.mc_script.write_panel_terminal("?a" + str(i + 1) + ".disp"))
+        self.mc_script.press_close_terminal()
+        return result
+
+    def write_offset_mastering_for_all_axis(self, arr_offset):
+        self.system.open_system_configurator()
+        self.system.open_system()
+
+        self.system.write_axis1_offset(arr_offset[0])
+        self.system.write_axis2_offset(arr_offset[1])
+        self.system.write_axis3_offset(arr_offset[2])
+        self.system.write_axis4_offset(arr_offset[3])
+
+    def write_offset_mastering_for_one_axis(self, axis, value):
+        self.system.open_system_configurator()
+        self.system.open_system()
+        if int(axis) == 1:
+            self.system.write_axis1_offset(str(value))
+        if int(axis) == 2:
+            self.system.write_axis2_offset(str(value))
+        if int(axis) == 3:
+            self.system.write_axis3_offset(str(value))
+        if int(axis) == 4:
+            self.system.write_axis4_offset(str(value))
+
     def read_axis_description(self):
         result = []
         for i in range(4):
             try:
-                result.append(self.tel_comm.telnet_write_read("?" + self.vargain_axis_disc + "[0]" + "[" + str(i) + "]"))
+                result.append(
+                    self.tel_comm.telnet_write_read("?" + self.vargain_axis_disc + "[0]" + "[" + str(i) + "]"))
             except ValueError:
                 return result
         return result
@@ -330,6 +361,7 @@ class VariableGains:
         except:
             print("Something wrong when trying to read from drive")
 
+    '''
     def write_axis_description(self, command):
         index = 0
         for i in command:
@@ -339,7 +371,7 @@ class VariableGains:
 
             except ValueError:
                 return False
-
+    
     def write_gainset_description(self, command):
         index = 0
         for i in command:
@@ -349,10 +381,11 @@ class VariableGains:
 
             except:
                 return False
+    '''
 
     def write_single_axis_description(self, command, axis_set):
         try:
-            self.tel_comm.telnet_write(self.vargain_axis_disc + axis_set + "=" + command)
+            self.tel_comm.telnet_write(self.vargain_axis_disc + "[0][" + str(axis_set) + "]=" + command)
 
         except:
             return False
@@ -364,6 +397,13 @@ class VariableGains:
             return False
 
         return result
+
+    def write_single_gainset_description(self, command, gainset_set):
+        try:
+            self.tel_comm.telnet_write(self.vargain_gainset_disc + "[0][" + str(gainset_set) + "]=" + command)
+
+        except:
+            return False
 
     def enable_vargains(self):
         try:
@@ -424,7 +464,8 @@ class VariableGains:
 
     def connect_cs(self):
         # self._mc_project = Selector.Home(self.ip, self.path, self.user, self.password)
-        self.mc_script.open_cs()
+        # self.mc_script.open_cs()
+        self.system.open_cs()
 
     def read_pfac_from_terminal(self):
         result = []
@@ -467,7 +508,7 @@ class VariableGains:
             for j in range(4):
                 try:
                     result.append(self.tel_comm.telnet_write_read("?vargains.axis.cplg" + "[" + str(i + 1) + "]" +
-                                                         "[" + str(j) + "]"))
+                                                                  "[" + str(j) + "]"))
                 except ValueError:
                     return False
         return result
@@ -516,8 +557,9 @@ class VariableGains:
                 try:
                     # print("?" + parametr + "[" + str(i+1) + "]" + "[" + str(num_gainset) + "]")
                     result.append(
-                        self.tel_comm.telnet_write_read("?" + parameter + "[" + str(i + 1) + "]" + "[" + str(num_gainset)
-                                               + "]"))
+                        self.tel_comm.telnet_write_read(
+                            "?" + parameter + "[" + str(i + 1) + "]" + "[" + str(num_gainset)
+                            + "]"))
 
                 except ValueError:
                     return False
@@ -577,7 +619,7 @@ class VariableGains:
     def write2drive_params_and_full_config(self, display_out):
         try:
             for axis in range(4):
-                print(Fore.LIGHTBLUE_EX + "\tSet parameters for axis " + str(axis+1))
+                print(Fore.LIGHTBLUE_EX + "Set parameters for axis " + str(axis + 1))
                 self.__write_params2drive(axis + 1, display_out)
             self.__write_full_configuration_gainset2drive()
             return True
@@ -587,7 +629,7 @@ class VariableGains:
     def write2drive_params_and_part_config(self, display_out):
         try:
             for axis in range(4):
-                print(Fore.LIGHTBLUE_EX + "\tSet parameters for axis " + str(axis+1))
+                print(Fore.LIGHTBLUE_EX + "Set parameters for axis " + str(axis + 1))
                 self.__write_params2drive(axis + 1, display_out)
             self.__write_part_configuration_gainset2drive()
             return True
@@ -597,4 +639,5 @@ class VariableGains:
 
 # obj = VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
 # obj.connect_cs()
+# obj.write_offset_mastering_for_one_axis(1, 11)
 # print(obj.read_axis_wrn_status())

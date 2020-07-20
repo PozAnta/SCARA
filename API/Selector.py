@@ -5,6 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 from API.Address import Login
 from API.Address import ProjectEditorSection
 from API.Address import HomeSection
+from API.Address import SystemConfigurationSection
 
 
 class Select:
@@ -18,6 +19,7 @@ class Select:
         self.login_m = Login()
         self.pr_edit = ProjectEditorSection()
         self.home = HomeSection()
+        self.sys_config = SystemConfigurationSection()
 
         self.power_button_obj = ""
         self.terminal_obj = ""
@@ -50,6 +52,38 @@ class Select:
 
     def close_cs(self):
         self.driver.close()
+
+    def open_panel_terminal(self):
+        terminal_onj = self.driver.find_element_by_xpath(self.pr_edit.open_panel_terminal_addr())
+        terminal_onj.click()
+        time.sleep(3)
+
+    def write_panel_terminal(self, command):
+        write_txt_obj = self.driver.find_element_by_xpath(self.pr_edit.write_panel_terminal_addr())
+        write_txt_obj.send_keys(Keys.ENTER)
+        time.sleep(1)
+        write_txt_obj.send_keys("clear")
+        time.sleep(1)
+        write_txt_obj.send_keys(Keys.ENTER)
+        time.sleep(1)
+        write_txt_obj.send_keys(command)
+        time.sleep(1)
+        write_txt_obj.send_keys(Keys.ENTER)
+        write_txt_obj.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        text_obj = self.driver.find_element_by_xpath('//*[@id="container"]/div[2]/terminal-window')
+        out = str(text_obj.text)
+        out = out[out.find(command) + len(command):]
+        out = out[:out.find("-->")]
+        # print(out)
+        time.sleep(1)
+        return out
+
+    def press_close_terminal(self):
+        close_term_obj = self.driver.find_element_by_xpath(self.pr_edit.press_close_terminal_addr())
+        close_term_obj.click()
+        time.sleep(3)
 
 
 class Graph(Select):
@@ -281,7 +315,7 @@ class IO(Select):
 
     def read_status_in5(self):
         input5_obj = self.driver.find_element_by_xpath('//*[@id="mat-slide-toggle-5-input"]')
-        # print(input5_obj.find_element_by_link_text("disabled aria-checked"))
+        print(input5_obj.find_element_by_link_text("disabled aria-checked"))
 
     def press_out_1000(self):
         out_obj = self.driver.find_element_by_xpath('//*[@id="mat-slide-toggle-2"]')
@@ -390,6 +424,65 @@ class Home(Select):
         time.sleep(1)
         return text_obj.text
 
+
+class SystemConfigurator(Select):
+    def open_system_configurator(self):
+        obj = self.driver.find_element_by_id(self.sys_config.open_sys_configuration_addr())
+        obj.click()
+        time.sleep(3)
+
+    def open_system(self):
+        obj = self.driver.find_element_by_xpath(self.sys_config.open_system_addr())
+        obj.click()
+        time.sleep(3)
+
+    def write_axis1_offset(self, value):
+
+        text1 = self.driver.find_element_by_xpath(self.sys_config.a1_offset_addr())
+        time.sleep(1)
+        for i in range(6):
+            text1.send_keys(Keys.BACKSPACE)
+
+        text1.send_keys(str(value))
+        time.sleep(3)
+        text1.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+    def write_axis2_offset(self, value):
+        text1 = self.driver.find_element_by_xpath(self.sys_config.a2_offset_addr())
+        time.sleep(1)
+        for i in range(6):
+            text1.send_keys(Keys.BACKSPACE)
+
+        text1.send_keys(str(value))
+        time.sleep(3)
+        text1.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+    def write_axis3_offset(self, value):
+        text1 = self.driver.find_element_by_xpath(self.sys_config.a3_offset_addr())
+        time.sleep(1)
+        for i in range(6):
+            text1.send_keys(Keys.BACKSPACE)
+
+        text1.send_keys(str(value))
+        time.sleep(3)
+        text1.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+    def write_axis4_offset(self, value):
+        text1 = self.driver.find_element_by_xpath(self.sys_config.a4_offset_addr())
+        time.sleep(1)
+        for i in range(6):
+            text1.send_keys(Keys.BACKSPACE)
+
+        text1.send_keys(str(value))
+        time.sleep(3)
+        text1.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+
+
 '''
 obj = ProjectEditor("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
 obj.open_cs()
@@ -397,3 +490,9 @@ obj.project_editor()
 obj.open_panel_terminal()
 obj.write_panel_terminal("?ver")
 '''
+# obj = SystemConfigurator("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
+# obj.open_cs()
+# obj.open_system_configurator()
+# obj.open_system()
+# obj.write_axis1_offset("1")
+

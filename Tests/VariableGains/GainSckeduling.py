@@ -106,31 +106,33 @@ class Support(Main):
             print(Style.RESET_ALL)
             self.status = False
 
-    def check_negative_wrn_status(self, result):
-        print(Fore.LIGHTBLUE_EX + "\t--> Check negative WRN status for all axis")
+    def check_negative_wrn_status(self):
+        print(Fore.LIGHTBLUE_EX + "--> Check negative WRN status for all axis")
+        result = self.test.read_axis_wrn_status()
+        print(Style.RESET_ALL)
         for i in result:
 
             if str(i).find("GainSet Configuration/Parameters Changed - Execution Needed (4202241)") != -1:
                 print(result)
-                print(Fore.GREEN + "\t\t--The check negative WRN status OK--")
+                print(Fore.GREEN + "\t--The check negative WRN status OK--")
                 print(Style.RESET_ALL)
             else:
                 print(result)
-                print(Fore.RED + "\t\t--The check negative WRN status FAIL--")
+                print(Fore.RED + "\t--The check negative WRN status FAIL--")
                 print(Style.RESET_ALL)
                 self.status = False
 
     def check_clear_status(self, result):
-        print(Fore.LIGHTBLUE_EX + "\t--> Check FLT/WRN status for all axis")
+        print(Fore.LIGHTBLUE_EX + "--> Check FLT/WRN status for all axis")
         print(Style.RESET_ALL)
         for i in result:
             if int(i) != 0:
                 print("Warning(s) are: ", i)
-                print(Fore.RED + "\t\t--The check WRN status FAIL--")
+                print(Fore.RED + "\t--The check WRN status FAIL--")
                 print(Style.RESET_ALL)
                 self.status = False
             else:
-                print(Fore.GREEN + "\t\t--The check WRN status PASS--")
+                print(Fore.GREEN + "\t--The check WRN status OK--")
                 print(Style.RESET_ALL)
 
     def check_posfactor(self, pfac, direction, gear, posfac):
@@ -142,7 +144,7 @@ class Support(Main):
         count = 0
         for ind in posfac:
             if round(float(ind), 4) == round(position_coefficent[count], 4):
-                print(Fore.GREEN + "    --Compare posfactor with read value PASS--")
+                print(Fore.GREEN + "    --Compare posfactor with read value OK--")
                 print("Measure value: " + str(ind) + " Readed value: " + ind)
                 print(Style.RESET_ALL)
             else:
@@ -190,36 +192,57 @@ class Support(Main):
             print(Style.RESET_ALL)
 
     def check_wrn_status_clear(self):
-        print(Fore.LIGHTBLUE_EX + "\t--> Check FLT/WRN status for all axis")
+        print(Fore.LIGHTBLUE_EX + "--> Check FLT/WRN status for all axis")
         print(Style.RESET_ALL)
         result = self.test.wrn_status()
         axis_cntr = 1
         for i in result:
             if int(i) != 0:
                 print("Warning(s) are for axis " + str(axis_cntr) + " : ", i)
-                print(Fore.RED + "\t\t--The check WRN status FAIL--")
+                print(Fore.RED + "\t--The check WRN status FAIL--")
                 print(Style.RESET_ALL)
                 self.status = False
             else:
-                print(Fore.GREEN + "\t\t--The check WRN status for axis " + str(axis_cntr) + " PASS--")
+                print(Fore.GREEN + "\t--The check WRN status for axis " + str(axis_cntr) + " OK--")
                 print(Style.RESET_ALL)
             axis_cntr += 1
 
     def check_gainsetactive(self, master_ref_value):
-        print(Fore.LIGHTBLUE_EX + "\t--> Check gainset active status")
+        print(Fore.LIGHTBLUE_EX + "--> Check gainset active status")
         print(Style.RESET_ALL)
         result = self.test.read_gainset_from_drive()
         if float(master_ref_value) != float(result):
-            print(Fore.RED + "\t\t--The check gainset status FAIL--")
+            print(Fore.RED + "\t--The check gainset status FAIL--")
             print("Master reference is: " + str(master_ref_value) + " Output value is: " + str(result))
             print(Style.RESET_ALL)
             self.status = False
         else:
-            print(Fore.GREEN + "\t\t--The check gainset status OK--")
+            print(Fore.GREEN + "\t-The check gainset status OK--")
             print(Style.RESET_ALL)
 
     def get_versions(self):
         print("SD version: " + self.test.read_drive_version())
+
+    def perform_execute_control_and_vargains(self):
+        self.test.execute_vargains()
+        self.test.perform_execute()
+
+    def set_payload_sd(self, payload_value, reference_gainset):
+        print(Fore.LIGHTBLUE_EX + "-----Set payload to " + str(payload_value) + "kg ----")
+        self.test.set_drive_payload(payload_value)
+        self.check_gainsetactive(reference_gainset)
+
+    def activate_disactivate_inuse(self, status, number_set):
+        if status:
+            print(Fore.LIGHTBLUE_EX + "-----Activate gainset inuse " + str(number_set) + " ----")
+            self.test.activate_inuse_gainset(number_set)
+        else:
+            print(Fore.LIGHTBLUE_EX + "-----Dis-activate gainset inuse " + str(number_set) + " ----")
+            self.test.disactivate_inuse_gainset(number_set)
+
+    def disable_vargains_feature(self):
+        print(Fore.LIGHTBLUE_EX + "-----Disable gainset feature ----")
+        self.test.disable_vargains()
 
 
 class Test(Support):
@@ -250,39 +273,29 @@ class Test(Support):
         print(Fore.LIGHTBLUE_EX + "-----Start Negative payload gainset test ----")
         self.set_full_range_config()
         self.ckeck_description_readable()
-        print(Fore.LIGHTBLUE_EX + "-----Set payload to 6kg ----")
-        self.test.set_drive_payload(6)
-        self.check_gainsetactive(2)
-        print(Fore.LIGHTBLUE_EX + "-----Dis-activate gainset inuse 2 ----")
-        self.test.disactivate_inuse_gainset(2)
-        self.check_negative_wrn_status(self.test.read_axis_wrn_status())
-        self.test.execute_vargains()
-        self.test.perform_execute()
+        self.set_payload_sd(6, 2)
+        self.activate_disactivate_inuse(False, 2)
+        self.check_negative_wrn_status()
+        self.perform_execute_control_and_vargains()
         self.check_wrn_status_clear()
         self.check_gainsetactive(1)
-        print(Fore.LIGHTBLUE_EX + "-----Activate gainset inuse 2 ----")
-        self.test.activate_inuse_gainset(2)
-        self.test.execute_vargains()
-        self.test.perform_execute()
+
+        self.activate_disactivate_inuse(True, 2)
+        self.perform_execute_control_and_vargains()
         self.check_wrn_status_clear()
         self.check_gainsetactive(2)
-        print(Fore.LIGHTBLUE_EX + "-----Dis-activate gainset inuse 2 and 1 ----")
-        self.test.disactivate_inuse_gainset(2)
-        self.test.disactivate_inuse_gainset(1)
-        self.test.execute_vargains()
-        self.test.perform_execute()
+        self.activate_disactivate_inuse(False, 2)
+        self.activate_disactivate_inuse(False, 1)
+        self.perform_execute_control_and_vargains()
         self.check_wrn_status_clear()
         self.check_gainsetactive(0)
-        print(Fore.LIGHTBLUE_EX + "-----Dis-activate gainset inuse 0 ----")
-        self.test.disactivate_inuse_gainset(0)
-        self.test.execute_vargains()
-        self.test.perform_execute()
+        self.activate_disactivate_inuse(False, 0)
+        self.perform_execute_control_and_vargains()
         self.check_wrn_status_clear()
         self.check_gainsetactive(0)
-        print(Fore.LIGHTBLUE_EX + "-----Disable gainset feature ----")
-        self.test.disable_vargains()
-        self.test.execute_vargains()
-        self.test.perform_execute()
+
+        self.disable_vargains_feature()
+        self.perform_execute_control_and_vargains()
         self.check_wrn_status_clear()
 
         self.set_full_range_config()
@@ -407,9 +420,48 @@ class Test(Support):
         print(Fore.LIGHTBLUE_EX + "-----Start " + self.name_test + " test----")
         self.set_partial_range_config()
         self.check_wrn_status_clear()
+        self.set_payload_sd(0, 0)
+
+        print(Fore.LIGHTBLUE_EX + "Write/update variable gain set description for set 6")
+        self.test.write_single_gainset_description(
+            "{\"ax1\":\"loc2\",\"ax2\":\"loc2\",\"ax3\":\"loc2\",\"ax4\":\"full\",\"Payload\":\"6.0\"}", 7)
+        self.check_gainsetactive(0)
+        self.check_negative_wrn_status()
+        self.perform_execute_control_and_vargains()
+        self.check_gainsetactive(0)
+        self.check_wrn_status_clear()
+
+        self.set_payload_sd(6, 7)
+        self.check_wrn_status_clear()
+
+        self.test.write_single_gainset_description(
+            "{\"ax1\":\"loc1\",\"ax2\":\"loc2\",\"ax3\":\"loc2\",\"ax4\":\"full\",\"Payload\":\"6.0\"}", 7)
+        self.check_negative_wrn_status()
+        self.perform_execute_control_and_vargains()
+        self.check_gainsetactive(5)
+        self.check_wrn_status_clear()
+
+        self.test.write_single_gainset_description(
+            "{\"ax1\":\"loc2\",\"ax2\":\"loc2\",\"ax3\":\"loc2\",\"ax4\":\"full\",\"Payload\":\"6.0\"}", 7)
+        self.check_negative_wrn_status()
+        self.perform_execute_control_and_vargains()
+        self.check_wrn_status_clear()
+        self.check_gainsetactive(7)
+
+        self.set_payload_sd(2, 5)
+        self.check_wrn_status_clear()
+
+        self.test.write_single_axis_description(
+            "{\"SystemType\":\"SCARA\",\"AxisName\":\"ax1\",\"AxisState\":[\"loc0;-133;-100\","
+            "\"loc1;-99;-50\",\"loc3;-10;10\",\"loc2;11;50\",\"loc4;51;100\"],\"AxisUnits\":\"Deg\"}", 0)
+        self.check_negative_wrn_status()
+        self.perform_execute_control_and_vargains()
+        self.check_wrn_status_clear()
+        self.set_payload_sd(0, 1)
+
+        self.set_partial_range_config()
         self.test.set_drive_payload(0)
-
-
+        self.check_wrn_status_clear()
 
         self.get_versions()
         self.test.disconnect_cs()
@@ -459,36 +511,6 @@ class Test(Support):
         self.test.disconnect_cs()
 
     def payload_sanity_test(self):
-        pass
-
-    def end_effector_sanity_test(self):
-        pass
-
-    def offset_test(self):
-        pass
-
-    def full_range_payload_low_high_test(self):
-        pass
-
-    def full_range_payload_high_low_test(self):
-        pass
-
-    def full_range_endeff_low_high_test(self):
-        pass
-
-    def full_range_endeff_high_low_test(self):
-        pass
-
-    def partial_payload_low_high_test(self):
-        pass
-
-    def partial_payload_high_low_test(self):
-        pass
-
-    def partial_endeff_low_high_test(self):
-        pass
-
-    def partial_endeff_high_low_test(self):
         pass
 
 

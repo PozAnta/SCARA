@@ -86,3 +86,23 @@ class ProjectEditorSection(Address):
 class Login(Address):
     def open_cs_addr(self):
         return self.obj_address('Login')
+
+
+class SystemConfigurationSection(Address):
+    def open_sys_configuration_addr(self):
+        return self.obj_address('SystemConfiguration')
+
+    def open_system_addr(self):
+        return self.obj_address('System')
+
+    def a1_offset_addr(self):
+        return self.obj_address('MasterOffsetA1')
+
+    def a2_offset_addr(self):
+        return self.obj_address('MasterOffsetA2')
+
+    def a3_offset_addr(self):
+        return self.obj_address('MasterOffsetA3')
+
+    def a4_offset_addr(self):
+        return self.obj_address('MasterOffsetA4')

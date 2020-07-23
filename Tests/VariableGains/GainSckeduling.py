@@ -1,40 +1,15 @@
-from Provider import Provide
+from Provider import VargainsProvide
 from colorama import Fore, Style
-import time
 
 
 class Main:
 
     def __init__(self, name_test="NA"):
 
-        self.test = Provide.VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
+        self.test = VargainsProvide.VariableGains("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin", "ADMIN")
         # self.test.connect_cs()
         self.name_test = name_test
         self.status = True
-
-        self.warnings = ["(4202242)",
-                         "(4202241)"]
-
-        self.decsription = [
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis1\",\"AxisState\":[\"axis1_full;-130;130\"],\"AxisUnits\":\"Deg\"}",
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis2\",\"AxisState\":[\"axis2_full;-140;140\"],\"AxisUnits\":\"Deg\"}",
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis3\",\"AxisState\":[\"axis3_full;-170;40\"],\"AxisUnits\":\"mm\"}",
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis4\",\"AxisState\":[\"axis4_full;-370;370\"],\"AxisUnits\":\"Deg\"}"]
-
-        self.decsription_neg = [
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis1\",\"AxisState\":[\"axis1_full;-130;110\"],\"AxisUnits\":\"Deg\"}",
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis2\",\"AxisState\":[\"axis1_full;-140;140\"],\"AxisUnits\":\"Deg\"}",
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis3\",\"AxisState\":[\"axis1_full;-150;10\"],\"AxisUnits\":\"mm\"}",
-            "{\"SystemType\":\"SCARA\",\"AxisName\":\"axis4\",\"AxisState\":[\"axis1_full;-360;360\"],\"AxisUnits\":\"Deg\"}"]
-
-        self.gainset_desc = ["{\"axis1\":\"axis1_full\",\"axis2\":\"axis2_full\",\"axis3\":\"axis3_full\",\"axis4\":\"axis4_full\",\"Payload\":\"0.0\"}",
-                             "{\"axis1\":\"axis1_full\",\"axis2\":\"axis2_full\",\"axis3\":\"axis3_full\",\"axis4\":\"axis4_full\",\"Payload\":\"3.0\"}",
-                             "{\"axis1\":\"axis1_full\",\"axis2\":\"axis2_full\",\"axis3\":\"axis3_full\",\"axis4\":\"axis4_full\",\"Payload\":\"6.0\"}"]
-
-        self.negative_gainset_desc = [
-            "{\"axis1\":\"axis1_full\",\"axis22\":\"axis2_full\",\"axis3\":\"axis3_full\",\"axis4\":\"axis4_full\",\"Payload\":\"0.0\"}",
-            "{\"axis1\":\"axis1_full\",\"axis22\":\"axis2_full\",\"axis3\":\"axis3_full\",\"axis4\":\"axis4_full\",\"Payload\":\"3.0\"}",
-            "{\"axis1\":\"axis1_full\",\"axis22\":\"axis2_full\",\"axis3\":\"axis3_full\",\"axis4\":\"axis4_full\",\"Payload\":\"6.0\"}"]
 
 
 class Support(Main):

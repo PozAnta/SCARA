@@ -311,7 +311,7 @@ class ProjectEditor(Select):
         time.sleep(3)
 
 
-class IO(Select):
+class IO(ProjectEditor):
 
     def read_status_in5(self):
         input5_obj = self.driver.find_element_by_xpath('//*[@id="mat-slide-toggle-5-input"]')

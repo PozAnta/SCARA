@@ -82,6 +82,54 @@ class ProjectEditorSection(Address):
     def maxx_outputs_addr(self):
         return self.obj_address('MaxxOutputs')
 
+    def out_1000_addr(self):
+        return self.obj_address('Out1001')
+
+    def out_1001_addr(self):
+        return self.obj_address('Out1001')
+
+    def out_1002_addr(self):
+        return self.obj_address('Out1002')
+
+    def out_1003_addr(self):
+        return self.obj_address('Out1003')
+
+    def out_1004_addr(self):
+        return self.obj_address('Out1004')
+
+    def out_1005_addr(self):
+        return self.obj_address('Out1005')
+
+    def out_1006_addr(self):
+        return self.obj_address('Out1006')
+
+    def out_1007_addr(self):
+        return self.obj_address('Out1007')
+
+    def out_1008_addr(self):
+        return self.obj_address('Out1008')
+
+    def out_1009_addr(self):
+        return self.obj_address('Out1009')
+
+    def out_1010_addr(self):
+        return self.obj_address('Out1010')
+
+    def out_1011_addr(self):
+        return self.obj_address('Out1011')
+
+    def out_1012_addr(self):
+        return self.obj_address('Out1012')
+
+    def out_1013_addr(self):
+        return self.obj_address('Out1013')
+
+    def out_1014_addr(self):
+        return self.obj_address('Out1014')
+
+    def out_1015_addr(self):
+        return self.obj_address('Out1015')
+
 
 class Login(Address):
     def open_cs_addr(self):

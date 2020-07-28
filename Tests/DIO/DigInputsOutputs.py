@@ -5,8 +5,7 @@ from colorama import Fore, Style
 class Main:
 
     def __init__(self, name_test="NA"):
-        self.test = InputOutputProvide.InputOutput("192.168.0.1", "C:\\WebDriver\\Test\\chromedriver.exe", "admin",
-                                                   "ADMIN")
+        self.test = InputOutputProvide.IOProvide()
         self.name_test = name_test
         self.status = True
         '''
@@ -131,6 +130,7 @@ class Support(Main):
 
 
 class Test(Support):
+
     def inputs_test(self):
         self.test.connect()
         self.status = True

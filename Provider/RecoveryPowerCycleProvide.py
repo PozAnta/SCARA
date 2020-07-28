@@ -1,11 +1,21 @@
 import time
 from Provider import EnableDisableProvide
+from Provider import CommProvide
 
 
-class RecoveryPowerCycle(EnableDisableProvide):
+class Support(EnableDisableProvide):
+    def __init__(self, name_ser_port):
+        self.enable_disable = EnableDisableProvide.EnableProvide()
+        self.serial_comm = CommProvide.CommunicationSerial(name_ser_port)
+
+
+class RecoveryPowerCycle(Support):
+
+    def connect(self):
+        self.enable_disable.connect()
 
     def disconnect(self):
-        self.disconnect()
+        self.enable_disable.disconnect()
 
     def perform_power_cycle(self):
         self.serial_comm.write_serial("outinv 2 0")
@@ -22,3 +32,5 @@ class RecoveryPowerCycle(EnableDisableProvide):
     def perform_kill_adept_script(self):
         self.proj_editor.kill_unload()
 
+
+objj = RecoveryPowerCycle()

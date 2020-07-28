@@ -15,7 +15,6 @@ class Support:
         self.config = ConfigParser()
         self.config.read('C:\\Python\\Robot\\Scara\\Tests\\DIO\\Scripts\\IOconfig.ini')
 
-        # print(self.config.options('MainDigitalInputs'))
         self.main_inputs_values = {}
         self.temp_inputs_values = {}
         self.safety_inputs_values = {}
@@ -215,3 +214,7 @@ class SetResetOutput(Support):
         for i in range(16):
             self.io.write_panel_terminal("sys.dout[" + str(1000 + i) + "] = 1")
         self.io.press_close_terminal()
+
+
+class IOProvide(ReadInputs, ReadOutputs, SetResetOutput):
+    pass

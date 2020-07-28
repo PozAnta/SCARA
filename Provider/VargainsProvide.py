@@ -408,8 +408,7 @@ class WriteData(Support):
 
 
 class VariableGains():
-    def __init__(self):
-        self.descript = Description()
+    pass
 
 
 

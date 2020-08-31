@@ -15,8 +15,8 @@ class Support:
         self.tel_comm = CommProvide.CommunicationTelnet()
         self.serial_comm = CommProvide.CommunicationSerial(self.serial_port)
 
-        self.enable_status_drive = "?EnableModule.Active"
-        self.enable_status_mc = "?Scara.En"
+        self.enable_status_drive = "Active"
+        self.enable_status_mc = "?En"
 
     def connect(self):
         self.home.open_cs()
@@ -32,12 +32,12 @@ class Enable(Support):
 
     def enable_setup_terminal(self):
         self.proj_editor.open_panel_terminal()
-        self.proj_editor.write_panel_terminal("Scara.En=1")
+        self.proj_editor.write_panel_terminal("En=1")
         self.proj_editor.press_close_terminal()
 
     def disable_setup_terminal(self):
         self.proj_editor.open_panel_terminal()
-        self.proj_editor.write_panel_terminal("Scara.En=0")
+        self.proj_editor.write_panel_terminal("En=0")
         self.proj_editor.press_close_terminal()
 
 

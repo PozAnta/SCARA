@@ -32,5 +32,5 @@ class RecoveryPowerCycle(Support):
     def perform_kill_adept_script(self):
         self.proj_editor.kill_unload()
 
-
-objj = RecoveryPowerCycle()
+    def read_ec_communication_status(self):
+        pass

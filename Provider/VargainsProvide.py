@@ -133,6 +133,18 @@ class Config(Support):
 
         self.perform_execute()
 
+    def __write_params2drive_endurance_setup(self, num_axis):
+
+        path = self.path_params + '\\axis' + str(num_axis) + '_end.txt'
+        datafile = open(path, 'r')
+        stringfiles = datafile.read()
+        split_data = stringfiles.split("\n")
+
+        for i in split_data:
+            self.tel_comm.telnet_write_read("s " + str(i))
+
+        self.perform_execute()
+
     def __write_part_configuration_gainset2drive(self):
 
         datafile = open(self.path_part_config, 'r')
